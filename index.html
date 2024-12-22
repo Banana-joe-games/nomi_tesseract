@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll a Eliminazione Diretta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #poll-container {
+            margin-top: 20px;
+        }
+        .choice-button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #winner {
+            font-size: 24px;
+            font-weight: bold;
+            color: green;
+        }
+        #leaderboard {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Poll a Eliminazione Diretta</h1>
+    <p>Vota tra i nomi fino a determinare il tuo preferito!</p>
+
+    <div id="name-input-container">
+        <label for="participant-name">Inserisci il tuo nome:</label>
+        <input type="text" id="participant-name" placeholder="Il tuo nome">
+        <button id="start-button">Inizia</button>
+    </div>
+
+    <div id="poll-container" style="display: none;">
+        <button class="choice-button" id="choice1"></button>
+        <button class="choice-button" id="choice2"></button>
+    </div>
+
+    <div id="winner" style="display: none;">Il vincitore è: </div>
+
+    <div id="leaderboard">
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Partecipante</th>
+                    <th>Vincitore</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const items = [
+            "Glorybound", "Tilesdoom", "Eternal Colosseum", "Blood and Valor", 
+            "Arena Legends", "Valorforge", "The Last Stand", "Crucible Arena", 
+            "Battlespire", "Eternal Trial", "Eternal Crucible", "Godforge", 
+            "Mythforge", "Godspire", "Heavenforge", "Jotunspire", 
+            "Eternal Pantheon", "Erebarch", "Helspire", "Vestfall", "Erebus Rise"
+        ];
+        const leaderboard = [];
+        let index = 0;
+        let participantName = "";
+
+        const nameInputContainer = document.getElementById('name-input-container');
+        const pollContainer = document.getElementById('poll-container');
+        const winnerDiv = document.getElementById('winner');
+        const choice1 = document.getElementById('choice1');
+        const choice2 = document.getElementById('choice2');
+        const leaderboardBody = document.getElementById('leaderboard-body');
+        const startButton = document.getElementById('start-button');
+        const participantNameInput = document.getElementById('participant-name');
+
+        function updateChoices() {
+            if (index >= items.length - 1) {
+                pollContainer.style.display = 'none';
+                winnerDiv.style.display = 'block';
+                winnerDiv.textContent = `Il vincitore è: ${items[0]}`;
+                addToLeaderboard(participantName, items[0]);
+                return;
+            }
+            choice1.textContent = items[index];
+            choice2.textContent = items[index + 1];
+        }
+
+        function addToLeaderboard(name, winner) {
+            leaderboard.push({ name, winner });
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `<td>${name}</td><td>${winner}</td>`;
+            leaderboardBody.appendChild(newRow);
+        }
+
+        startButton.addEventListener('click', () => {
+            participantName = participantNameInput.value.trim();
+            if (participantName === "") {
+                alert("Per favore, inserisci il tuo nome!");
+                return;
+            }
+            nameInputContainer.style.display = 'none';
+            pollContainer.style.display = 'block';
+            updateChoices();
+        });
+
+        choice1.addEventListener('click', () => {
+            items.splice(index + 1, 1);
+            updateChoices();
+        });
+
+        choice2.addEventListener('click', () => {
+            items.splice(index, 1);
+            updateChoices();
+        });
+    </script>
+</body>
+</html>
